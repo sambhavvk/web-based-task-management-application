@@ -1,6 +1,6 @@
 import React from "react";
 import Task from "./Task"
-function TaskList(props) {
+function Tasklist(props) {
     const tasks = props.tasks.map(task => <Task key={task.id} task={task} />);
     return (
       <div>
@@ -8,4 +8,5 @@ function TaskList(props) {
       </div>
     );
   }
-  
+
+export default Tasklist;

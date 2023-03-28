@@ -10,4 +10,4 @@ function TaskDetail(props) {
       </div>
     );
   }
-  
+export default TaskDetail

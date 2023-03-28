@@ -89,4 +89,4 @@ class EditTask extends React.Component {
       );
     }
   }
-  
+export default EditTask

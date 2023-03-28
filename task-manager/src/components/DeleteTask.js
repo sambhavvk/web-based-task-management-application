@@ -13,4 +13,4 @@ function DeleteTask(props) {
       </div>
     );
   }
-  
+export default DeleteTask

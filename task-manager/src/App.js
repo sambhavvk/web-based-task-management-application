@@ -5,7 +5,8 @@ import EditTask from './components/EditTask';
 import Login from './components/Login';
 import TaskDetails from './components/TaskDetails';
 import UserList from './components/UserList';
-import TaskList from './components/Tasklist';
+import Tasklist from './components/Tasklist';
+import RegistrationForm from './components/RegistrationForm';
 
 function App() {
   const [tasks, setTasks] = useState([
@@ -53,17 +54,17 @@ function App() {
 
   return (
     <div>
-      {!isLoggedIn && <Login onLoginSuccess={handleLoginSuccess} />}
-      {isLoggedIn && (
+      {!isLoggedIn && (
         <div>
           <h1>Task Management Application</h1>
-          <UserList users={users} onSelectUser={handleSelectUser} />
-          {selectedUser && <h2>Tasks Assigned to {selectedUser.name}</h2>}
-          <TaskList tasks={tasks} onSelectTask={handleSelectTask} onTaskCompletion={handleTaskCompletion} selectedUser={selectedUser} />
-          {selectedTask && <TaskDetails task={selectedTask} />}
-          <AddTask onAddTask={handleAddTask} />
-          <EditTask task={selectedTask} onEditTask={handleEditTask} />
-          <DeleteTask taskId={selectedTask ? selectedTask.id : null} onDeleteTask={handleDeleteTask} />
+          <Login onLoginSuccess={handleLoginSuccess} />
+          <RegistrationForm />
+        </div>
+      )}
+      {isLoggedIn && (
+        <div>
+          <h1>Welcome, User!</h1>
+          <Tasklist />
         </div>
       )}
     </div>

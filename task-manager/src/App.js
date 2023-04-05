@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import AddTask from './components/AddTask';
 import DeleteTask from './components/DeleteTask';
 import EditTask from './components/EditTask';
@@ -53,22 +54,45 @@ function App() {
   };
 
   return (
-    <div>
-      {!isLoggedIn && (
-        <div>
-          <h1>Task Management Application</h1>
-          <Login onLoginSuccess={handleLoginSuccess} />
-          <RegistrationForm />
-        </div>
-      )}
-      {isLoggedIn && (
-        <div>
-          <h1>Welcome, User!</h1>
-          <Tasklist />  
-        </div>
-      )}
-    </div>
+    <Router>
+      <div>
+        {!isLoggedIn && (
+          <div>
+            <h1>Task Management Application</h1>
+            <Login onLoginSuccess={handleLoginSuccess} />
+            <Link to="/register">Register</Link>
+          </div>
+        )}
+        {isLoggedIn && (
+          <div>
+            <h1>Welcome, User!</h1>
+            <Switch>
+              <Route exact path="/">
+                <Tasklist />
+              </Route>
+              <Route path="/add-task">
+                <AddTask onAddTask={handleAddTask} />
+              </Route>
+              <Route path="/edit-task/:id">
+                <EditTask tasks={tasks} onEditTask={handleEditTask} />
+              </Route>
+              <Route path="/task-details/:id">
+                <TaskDetails tasks={tasks} />
+              </Route>
+              <Route path="/delete-task/:id">
+                <DeleteTask tasks={tasks} onDeleteTask={handleDeleteTask} />
+              </Route>
+              <Route path="/user-list">
+                <UserList users={users} onSelectUser={handleSelectUser} />
+              </Route>
+              <Route path="/register">
+                <RegistrationForm />
+              </Route>
+            </Switch>
+          </div>
+        )}
+      </div>
+    </Router>
   );
 }
-
 export default App;

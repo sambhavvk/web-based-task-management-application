@@ -1,57 +1,40 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function RegistrationForm(props) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+const RegistrationForm = () => {
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const username = e.target.username.value;
+    const password = e.target.password.value;
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    // Send a POST request to the server to create a new user
-    const response = await fetch('/api/users', {
+    const response = await fetch('/.netlify/functions/register', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
       },
-      body: JSON.stringify({
-        name,
-        email,
-        password
-      })
+      body: JSON.stringify({ username, password }),
     });
 
-    // If the request was successful, log the user in automatically
-    if (response.ok) {
-      const user = await response.json();
-      localStorage.setItem('user', JSON.stringify(user));
-      props.onLoginSuccess();
-    } else {
-      const error = await response.json();
-      alert(error.message);
-    }
+    const data = await response.json();
+    console.log(data.message);
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <label>
-        Name:
-        <input type="text" value={name} onChange={(event) => setName(event.target.value)} />
-      </label>
-      <br />
-      <label>
-        Email:
-        <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
-      </label>
-      <br />
-      <label>
-        Password:
-        <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
-      </label>
-      <br />
-      <button type="submit">Register</button>
-    </form>
+    <div>
+      <h2>Registration Form</h2>
+      <form onSubmit={handleSubmit}>
+        <label htmlFor="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+        <br />
+        <label htmlFor="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+        <br />
+        <label htmlFor="confirm-password">Confirm Password:</label>
+        <input type="password" id="confirm-password" name="confirm-password" required />
+        <br />
+        <button type="submit">Register</button>
+      </form>
+    </div>
   );
-}
+};
 
 export default RegistrationForm;

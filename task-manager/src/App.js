@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import AddTask from './components/AddTask';
 import DeleteTask from './components/DeleteTask';
 import EditTask from './components/EditTask';
@@ -8,6 +8,7 @@ import TaskDetails from './components/TaskDetails';
 import UserList from './components/UserList';
 import Tasklist from './components/Tasklist';
 import RegistrationForm from './components/RegistrationForm';
+import TimeTracking from './components/TimeTracking';
 
 function App() {
   const [tasks, setTasks] = useState([
@@ -56,40 +57,42 @@ function App() {
   return (
     <Router>
       <div>
-        {!isLoggedIn && (
+        {!isLoggedIn ? (
           <div>
             <h1>Task Management Application</h1>
-            <Login onLoginSuccess={handleLoginSuccess} />
-            <Link to="/register">Register</Link>
+            <Routes>
+              <Route path="/" element={<Login onLoginSuccess={handleLoginSuccess} />} />
+              <Route path="/register" element={<RegistrationForm />} />
+            </Routes>
+            <nav>
+              <ul>
+                <li>
+                  <Link to="/">Login</Link>
+                </li>
+                <li>
+                  <Link to="/register">Register</Link>
+                </li>
+              </ul>
+            </nav>
           </div>
-        )}
-        {isLoggedIn && (
+        ) : (
           <div>
             <h1>Welcome, User!</h1>
-            <Switch>
-              <Route exact path="/">
-                <Tasklist />
-              </Route>
-              <Route path="/add-task">
-                <AddTask onAddTask={handleAddTask} />
-              </Route>
-              <Route path="/edit-task/:id">
-                <EditTask tasks={tasks} onEditTask={handleEditTask} />
-              </Route>
-              <Route path="/task-details/:id">
-                <TaskDetails tasks={tasks} />
-              </Route>
-              <Route path="/delete-task/:id">
-                <DeleteTask tasks={tasks} onDeleteTask={handleDeleteTask} />
-              </Route>
-              <Route path="/user-list">
-                <UserList users={users} onSelectUser={handleSelectUser} />
-              </Route>
-              <Route path="/register">
-                <RegistrationForm />
-              </Route>
-            </Switch>
-          </div>
+        <Routes>
+          {isLoggedIn && (
+            <>
+              <Route path="/" element={<Tasklist />} />
+              <Route path="/add-task" element={<AddTask onAddTask={handleAddTask} />} />
+              <Route path="/edit-task/:id" element={<EditTask tasks={tasks} onEditTask={handleEditTask} />} />
+              <Route path="/task-details/:id" element={<TaskDetails tasks={tasks} />} />
+              <Route path="/delete-task/:id" element={<DeleteTask tasks={tasks} onDeleteTask={handleDeleteTask} />} />
+              <Route path="/time-tracking/:taskId" element={<TimeTracking taskId={selectedTask?.id} />} />
+              <Route path="/user-list" element={<UserList users={users} onSelectUser={handleSelectUser} />} />
+            </>
+          )}
+          <Route path="/register" element={<RegistrationForm />} />
+        </Routes>
+        </div>
         )}
       </div>
     </Router>

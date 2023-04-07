@@ -1,26 +1,50 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-function TimeTracking(props) {
-  const [time, setTime] = useState(0);
+const TimeTracking = ({ taskId }) => {
+  const [isTracking, setIsTracking] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  const [intervalId, setIntervalId] = useState(null);
 
-  function startTimer() {
-    setInterval(() => {
-      setTime(prevTime => prevTime + 1);
-    }, 1000);
-  }
+  useEffect(() => {
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);
+      }
+    };
+  }, [intervalId]);
 
-  function stopTimer() {
-    clearInterval(interval);
-  }
+  const startTracking = () => {
+    if (!isTracking) {
+      setIsTracking(true);
+      const newIntervalId = setInterval(() => {
+        setElapsedTime((prevElapsedTime) => prevElapsedTime + 1);
+      }, 1000);
+      setIntervalId(newIntervalId);
+    }
+  };
+
+  const stopTracking = () => {
+    if (isTracking) {
+      setIsTracking(false);
+      if (intervalId) {
+        clearInterval(intervalId);
+        setIntervalId(null);
+      }
+    }
+  };
 
   return (
     <div>
-      <h3>Time Tracking</h3>
-      <p>Total Time: {time} seconds</p>
-      <button onClick={startTimer}>Start Timer</button>
-      <button onClick={stopTimer}>Stop Timer</button>
+      <h3>Task ID: {taskId}</h3>
+      <h4>Time Spent: {elapsedTime} seconds</h4>
+      <button onClick={startTracking} disabled={isTracking}>
+        Start
+      </button>
+      <button onClick={stopTracking} disabled={!isTracking}>
+        Stop
+      </button>
     </div>
   );
-}
+};
 
 export default TimeTracking;
